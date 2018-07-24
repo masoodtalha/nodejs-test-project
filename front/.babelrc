@@ -1,0 +1,17 @@
+{
+  "env": {
+    "presets": [
+      "env",
+      "react",
+      "stage-0"
+    ],
+    "plugins": [
+      "transform-export-extensions",
+      "transform-decorators-legacy"
+    ],
+    "only": [
+      "./**/*.js",
+      "node_modules/jest-runtime"
+    ]
+  }
+}
