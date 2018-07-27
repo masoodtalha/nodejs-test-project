@@ -24,6 +24,7 @@ export default class Login extends Component {
       showProgress: false
     };
     this.signup = {};
+    this.login = {};
   }
 
   updateSignupForm(val, action) {
@@ -58,12 +59,51 @@ export default class Login extends Component {
       },
       body: JSON.stringify(this.signup)
     }).then(function (response) {
-      return response.JSON();
+      return response.json();
     }).then(function (response) {
       self.setState({loginActive: true, showProgress: false});
       console.log("Got Data: ", response);
     }).catch(err=> {
       self.setState({openError: true})
+    });
+  }
+
+  updateLoginForm(val, action) {
+    switch (action) {
+      case "Email":
+        this.login.email = val;
+        break;
+
+      case "Password":
+        this.login.password = val;
+        break;
+    }
+  }
+
+  authenticateUser(history) {
+    const self = this;
+    console.log("Submitting Login: ", this.login, serverUrl);
+    this.setState({ showProgress: true });
+
+    fetch(`${serverUrl}/authUser`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.signup)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (response) {
+      if(response.data){
+        self.setState({showProgress: false });
+        console.log("Login Successful: ", response.data);
+        history.push('/dashboard');
+      }else{
+        self.setState({ showProgress: false , openError: true});
+        console.log("Login Failed");
+      }
+    }).catch(err => {
+      self.setState({ openError: true })
     });
   }
 
@@ -91,7 +131,7 @@ export default class Login extends Component {
                     <AccountCircle />
                   </Grid>
                   <Grid item xs={9}>
-                    <TextField label="Username" fullWidth onChange={(ev) => this.state.updateUserOrPass(ev.target.value, null)} />
+                    <TextField label="Username" fullWidth onChange={(ev) => this.updateLoginForm(ev.target.value, "Email")} />
                   </Grid>
                 </Grid>
 
@@ -100,11 +140,11 @@ export default class Login extends Component {
                     <Lock />
                   </Grid>
                   <Grid item xs={9}>
-                    <TextField type="password" label="Password" fullWidth onChange={(ev) => this.state.updateUserOrPass(null, ev.target.value)} />
+                    <TextField type="password" label="Password" fullWidth onChange={(ev) => this.updateLoginForm(ev.target.value, "Password")} />
                   </Grid>
                 </Grid>
 
-                <Button variant="raised" color="primary" className="loginBtn" onClick={() => this.state.authenticateUser(this.props.history)}>
+                <Button variant="raised" color="primary" className="loginBtn" onClick={() => this.authenticateUser(this.props.history)}>
                   Login
 								  <Send />
                 </Button>
