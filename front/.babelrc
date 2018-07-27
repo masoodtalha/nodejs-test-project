@@ -13,5 +13,6 @@
       "./**/*.js",
       "node_modules/jest-runtime"
     ]
-  }
+  },
+  "presets": ["env", "react"]
 }

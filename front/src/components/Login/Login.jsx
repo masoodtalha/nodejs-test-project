@@ -15,6 +15,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import {serverUrl} from '../../constants/client';
 
+
+const Cookies = new _cookies();
 export default class Login extends Component {
   constructor(props) {
     super();
@@ -90,13 +92,14 @@ export default class Login extends Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(this.signup)
+      body: JSON.stringify(this.login)
     }).then(function (response) {
       return response.json();
     }).then(function (response) {
-      if(response.data){
+      if(response.status === 200){
         self.setState({showProgress: false });
         console.log("Login Successful: ", response.data);
+        Cookies.set('token', response.data.token);
         history.push('/dashboard');
       }else{
         self.setState({ showProgress: false , openError: true});

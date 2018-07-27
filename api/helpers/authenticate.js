@@ -1,4 +1,5 @@
 const db = require('./db/connectionHelper');
+const {getSignInResponse} = require('./auth');
 
 exports.authenticateUser = function(model, username, password) {
   return new Promise((res, rej) => {
@@ -16,9 +17,10 @@ exports.authenticateUser = function(model, username, password) {
           });
         }
         console.log('+++User fetched successfully ' + data);
+        const signedData = getSignInResponse(data);
         return res({
           status: 200,
-          data,
+          data: signedData,
         });
       });
   });
