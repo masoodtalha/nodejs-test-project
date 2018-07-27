@@ -2,6 +2,7 @@ const user = require('../controllers/userController');
 
 exports.createUser = async function(req, res, next) {
   const groupData = req;
+  console.log('Called Called');
   const response = await user.createUser(groupData);
   res.send(response);
 };
