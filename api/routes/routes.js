@@ -9,39 +9,41 @@ exports.assignRoutes = function(app) {
   app.get('/users', users.getUserByEmail);
 
   app.put('/updateUser', jwt({
-      secret: config.jwtSecret
-    }), function (req, res) {
+      secret: config.jwtSecret,
+    }), function(req, res) {
       if (!req.user) return res.sendStatus(401);
-      users.updateUserById(req, res)
+      users.updateUserById(req, res);
     });
 
   app.post('/authUser', users.authenticateUser);
 
   app.post('/note', jwt({
-      secret: config.jwtSecret
-    }), function (req, res) {
+      secret: config.jwtSecret,
+    }), function(req, res) {
       if (!req.user) return res.sendStatus(401);
-      notes.createNote(req,res)
+      notes.createNote(req, res);
     });
 
   app.get('/notes', jwt({
-      secret: config.jwtSecret
-    }), function (req, res) {
-      if (!req.user) {return res.sendStatus(401)};
-      notes.getNotes(req, res)
+      secret: config.jwtSecret,
+    }), function(req, res) {
+      if (!req.user) {
+return res.sendStatus(401);
+};
+      notes.getNotes(req, res);
     });
 
   app.put('/editNote', jwt({
-      secret: config.jwtSecret
-    }), function (req, res) {
+      secret: config.jwtSecret,
+    }), function(req, res) {
       if (!req.user) return res.sendStatus(401);
-      notes.updateNoteById(req, res)
+      notes.updateNoteById(req, res);
     });
 
   app.delete('/deleteNote', jwt({
-      secret: config.jwtSecret
-    }), function (req, res) {
+      secret: config.jwtSecret,
+    }), function(req, res) {
       if (!req.user) return res.sendStatus(401);
-      notes.deleteNoteById(req, res)
+      notes.deleteNoteById(req, res);
     });
 };

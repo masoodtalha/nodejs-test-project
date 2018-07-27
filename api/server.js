@@ -11,8 +11,8 @@ const app = express();
 
 dbHelper.DBConnectMongoose()
   .then(() => {
-    app.use(bodyparser.urlencoded({ extended: true }));
-    app.use(bodyparser.json({ limit: '10mb' }));
+    app.use(bodyparser.urlencoded({extended: true}));
+    app.use(bodyparser.json({limit: '10mb'}));
     app.use(cors());
     routes.assignRoutes(app);
 
