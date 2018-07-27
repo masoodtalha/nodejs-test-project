@@ -46,9 +46,12 @@ export default class Dashboard extends Component {
       deleteDialog: false,
       showProgress: false,
       notesData: [],
+      displayData: [],
       editData: {},
       deleteData: {},
-      addNote: {},
+      addNote: {
+        date: new moment().format("DD MMM YYYY")
+      },
       message: "",
       filterDate: {}
     };
@@ -70,8 +73,8 @@ export default class Dashboard extends Component {
       return moment(`${data.date}`).isSameOrAfter(`${self.state.filterDate.start}`, "days") && moment(`${data.date}`).isSameOrBefore(`${self.state.filterDate.end}`, "days");
     })
     console.log("Filtered Data", obj, new moment().format("DD MM YYYY"));
-    this.setState({notesData: obj})
-    console.log("Data Update: ", this.state.notesData);
+    this.setState({displayData: obj})
+    console.log("Data Update: ", this.state.displayData);
   }
 
   populateNotes() {
@@ -85,7 +88,7 @@ export default class Dashboard extends Component {
     }).then(function (response) {
       return response.json();
     }).then(function (response) {
-      self.setState({ notesData: response.data, showProgress: false });
+      self.setState({ notesData: response.data, displayData: response.data, showProgress: false });
       console.log("Got Data: ", response.data);
     }).catch(err => {
       self.setState({ showProgress: false })
@@ -342,7 +345,7 @@ export default class Dashboard extends Component {
   fetchNotes(){
     const self = this;
     return(
-      this.state.notesData.length > 0 && this.state.notesData.map((data,index) => {
+      this.state.displayData.length > 0 && this.state.displayData.map((data,index) => {
         return(
         <TableRow key={index}>
           <TableCell>{data.date}</TableCell>
