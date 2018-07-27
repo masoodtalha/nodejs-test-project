@@ -31,11 +31,14 @@ import TimePicker from 'material-ui-pickers/TimePicker';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import Filter from '@material-ui/icons/FilterList';
+
+import moment from 'moment';
 
 const Cookies = new _cookies();
 export default class Dashboard extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state={
       tabValue: 0,
       openEdit: false,
@@ -43,12 +46,35 @@ export default class Dashboard extends Component {
       deleteDialog: false,
       showProgress: false,
       notesData: [],
+      displayData: [],
       editData: {},
       deleteData: {},
-      addNote: {},
+      addNote: {
+        date: new moment().format("DD MMM YYYY")
+      },
       message: "",
+      filterDate: {}
     };
     this.populateNotes();
+    this.checkAuthenticate(Cookies.get('token'), this.props.history);
+  }
+
+  checkAuthenticate(data, history) {
+    if (!data) {
+      history.push('/');
+    }
+  }
+
+  filterData() {
+    let obj = this.state.notesData;
+    const self = this;
+    obj = obj.filter((data)=> {
+      // console.log("Filtering", data.date, new moment().format("DD MMMM YYYY"));
+      return moment(`${data.date}`).isSameOrAfter(`${self.state.filterDate.start}`, "days") && moment(`${data.date}`).isSameOrBefore(`${self.state.filterDate.end}`, "days");
+    })
+    console.log("Filtered Data", obj, new moment().format("DD MM YYYY"));
+    this.setState({displayData: obj})
+    console.log("Data Update: ", this.state.displayData);
   }
 
   populateNotes() {
@@ -62,8 +88,8 @@ export default class Dashboard extends Component {
     }).then(function (response) {
       return response.json();
     }).then(function (response) {
-      self.setState({ notesData: response, showProgress: false });
-      console.log("Got Data: ", response);
+      self.setState({ notesData: response.data, displayData: response.data, showProgress: false });
+      console.log("Got Data: ", response.data);
     }).catch(err => {
       self.setState({ showProgress: false })
     });
@@ -319,7 +345,7 @@ export default class Dashboard extends Component {
   fetchNotes(){
     const self = this;
     return(
-      this.state.notesData.data && this.state.notesData.data.map((data,index) => {
+      this.state.displayData.length > 0 && this.state.displayData.map((data,index) => {
         return(
         <TableRow key={index}>
           <TableCell>{data.date}</TableCell>
@@ -329,6 +355,41 @@ export default class Dashboard extends Component {
           <TableCell><Delete className="deleteIcon" onClick={()=>{self.setState({deleteDialog: true, deleteData:data});}} /></TableCell>
         </TableRow>);
       })
+    );    
+  }
+  changeFilterDates(val, action) {
+    let obj = this.state.filterDate;
+    if (action === "Start") {
+      obj.start = val;
+      this.setState({ filterDate: obj })
+    } else {
+      obj.end = val;
+      this.setState({ filterDate: obj })
+    }
+  };
+
+  filterTable() {
+    return (
+      <div className="filterFields">
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <DatePicker
+            value={this.state.filterDate.start}
+            format='DD MMM YYYY'
+            onChange={(date) => { this.changeFilterDates(date.format("DD MMM YYYY"), "Start") }}
+          />
+        </MuiPickersUtilsProvider>
+
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <DatePicker
+            value={this.state.filterDate.end}
+            format='DD MMM YYYY'
+            style={{marginLeft: '40px'}}
+            onChange={(date) => { this.changeFilterDates(date.format("DD MMM YYYY"), "End") }}
+          />
+        </MuiPickersUtilsProvider>
+
+        <Button color="primary" onClick={()=>{this.filterData()}}>Filter</Button>
+      </div>
     );    
   }
 
@@ -341,11 +402,25 @@ export default class Dashboard extends Component {
             <Tab label="Add Report" />
           </Tabs>
           {this.state.showProgress && <CircularProgress color="secondary" />}
+          <Button color="secondary" 
+            style={{width: '50px', position: 'absolute',left: '90%', top: '15px'}}
+            onClick={() => {
+              let cookieExp = new Date((new Date().getTime()) - 365);
+              Cookies.set('token', '', {
+                path: '/',
+                expires: cookieExp
+              });
+              this.props.history.push('/');
+            }}
+            >
+            Logout
+          </Button>
         </AppBar>
         <div>
+          {this.filterTable()}
           <Table>
             <TableHead>
-              <TableCell style={{width: '10%'}}>Date</TableCell>
+              <TableCell className="filter" style={{ width: '15%' }}>Date <Filter style={{ height: '15px' }} /></TableCell>
               <TableCell style={{width: '10%'}}>Total Time</TableCell>
               <TableCell style={{width: '70%'}}>Notes</TableCell>
               <TableCell style={{ width: '2%' }}></TableCell>

@@ -46,3 +46,13 @@
   color: red;
   cursor: pointer;
 }
+
+.filter:hover {
+  cursor: pointer;
+}
+
+.filterFields {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
