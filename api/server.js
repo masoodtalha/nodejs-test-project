@@ -3,20 +3,22 @@ const bodyparser = require('body-parser');
 const dbHelper = require('./helpers/db/connectionHelper');
 const routes = require('./routes/routes');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 const app = express();
 
 
 dbHelper.DBConnectMongoose()
   .then(() => {
-    // configure app to use bodyParser()
-    // this will let us get the data from a POST
     app.use(bodyparser.urlencoded({ extended: true }));
     app.use(bodyparser.json({ limit: '10mb' }));
     app.use(cors());
     routes.assignRoutes(app);
 
-    app.listen(5000);
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+    app.listen(5000); // start the app on the port specified, port can be taken from config file
 
     console.log('Server listening on port 5000');
   })

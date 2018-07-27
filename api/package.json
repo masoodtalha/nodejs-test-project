@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "dependencies": {
     "body-parser": "1.17.2",
@@ -14,7 +14,8 @@
     "eslint-config-google": "^0.9.1",
     "express": "^4.15.4",
     "graphql": "^0.11.1",
-    "mongoose": "^4.11.9"
+    "mongoose": "^4.11.9",
+    "swagger-ui-express": "^3.0.10"
   },
   "author": "",
   "license": "ISC",

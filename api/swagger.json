@@ -1,0 +1,274 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Phlow Test Project",
+    "description": "Beautifully crafted application",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:5000",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Create new user in system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "New user is created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/updateUser": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Updates current user in the database",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to update",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "User is updated",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/authUser": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "description": "Authenticates current user if user & password is provided",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Pass Username and password",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "JWT token is returned",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/note": {
+      "post": {
+        "tags": [
+          "Notes"
+        ],
+        "description": "Creates a new note into the system",
+        "parameters": [
+          {
+            "name": "Note",
+            "in": "body",
+            "description": "Creates New Note",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Created Note is returned",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/notes": {
+      "get": {
+        "tags": [
+          "Notes"
+        ],
+        "description": "Returns all notes in the system",
+        "parameters": [
+          {
+            "name": "Note",
+            "in": "body",
+            "description": "Returns all notes",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "All notes are returned",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          }
+        }
+      }
+    },
+    "/editNote": {
+      "put": {
+        "tags": [
+          "Notes"
+        ],
+        "description": "A particular note is edited",
+        "parameters": [
+          {
+            "name": "Note",
+            "in": "body",
+            "description": "Edited note returned",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Edited note returned",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          }
+        }
+      }
+    },
+    "/deleteNote": {
+      "delete": {
+        "tags": [
+          "Notes"
+        ],
+        "description": "A particular note is deleted",
+        "parameters": [
+          {
+            "name": "Note",
+            "in": "body",
+            "description": "Deleted note returned",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted note returned",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Note": {
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "date": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
