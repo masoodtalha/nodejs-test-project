@@ -13,11 +13,58 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import {serverUrl} from '../../constants/client';
 
 export default class Login extends Component {
   constructor(props) {
     super();
-    this.state={};
+    this.state={
+      loginActive: true,
+      openError: false,
+      showProgress: false
+    };
+    this.signup = {};
+  }
+
+  updateSignupForm(val, action) {
+    switch(action) {
+      case "FirstName":
+        this.signup.firstName = val;
+        break;
+
+      case "LastName":
+        this.signup.lastName = val;
+        break;
+
+      case "Email":
+        this.signup.email = val;
+        break;
+      
+      case "Password":
+        this.signup.password = val;
+        break;
+    }
+  }
+
+  submitSignup() {
+    const self = this;
+    console.log("Submitting Signup: ", this.signup, serverUrl);
+    this.setState({showProgress: true});
+
+    fetch(`${serverUrl}/users`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.signup)
+    }).then(function (response) {
+      return response.JSON();
+    }).then(function (response) {
+      self.setState({loginActive: true, showProgress: false});
+      console.log("Got Data: ", response);
+    }).catch(err=> {
+      self.setState({openError: true})
+    });
   }
 
   render() {
@@ -29,37 +76,87 @@ export default class Login extends Component {
             <Paper elevation={4} className="paperContainer">
               {this.state.showProgress && <LinearProgress color="secondary" />}
 
-              <div className="loginHeaderText">
-                <Typography variant="display1" component="h3">
+              {this.state.loginActive && <div>
+                <div className="loginHeaderText">
+                  <Typography variant="display1" component="h3">
+                    Login
+								</Typography>
+                  <Typography variant="body2">
+                    to continue on todo APP
+								</Typography>
+                </div>
+
+                <Grid container spacing={8} alignItems="flex-end" justify="center">
+                  <Grid item>
+                    <AccountCircle />
+                  </Grid>
+                  <Grid item xs={9}>
+                    <TextField label="Username" fullWidth onChange={(ev) => this.state.updateUserOrPass(ev.target.value, null)} />
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={8} alignItems="flex-end" justify="center">
+                  <Grid item>
+                    <Lock />
+                  </Grid>
+                  <Grid item xs={9}>
+                    <TextField type="password" label="Password" fullWidth onChange={(ev) => this.state.updateUserOrPass(null, ev.target.value)} />
+                  </Grid>
+                </Grid>
+
+                <Button variant="raised" color="primary" className="loginBtn" onClick={() => this.state.authenticateUser(this.props.history)}>
                   Login
-								</Typography>
-                <Typography variant="body2">
-                  to continue to Therify
-								</Typography>
-              </div>
+								  <Send />
+                </Button>
+                
+                <Button color="primary" className="signupBtn" onClick={() => {this.setState({loginActive: false})}}>
+                  Sign up?
+                </Button>
+              </div>}
 
-              <Grid container spacing={8} alignItems="flex-end" justify="center">
-                <Grid item>
-                  <AccountCircle />
-                </Grid>
-                <Grid item xs={9}>
-                  <TextField label="Username" fullWidth onChange={(ev) => this.state.updateUserOrPass(ev.target.value, null)} />
-                </Grid>
-              </Grid>
+              {/* Signup Form */}
+              {!this.state.loginActive && <div>
+                <div className="loginHeaderText">
+                  <Typography variant="display1" component="h3">
+                    Sign Up  
+								  </Typography>
+                </div>
 
-              <Grid container spacing={8} alignItems="flex-end" justify="center">
-                <Grid item>
-                  <Lock />
+                <Grid container spacing={8} alignItems="flex-end" justify="center">
+                  <Grid item xs={5}>
+                    <TextField label="First Name" fullWidth onChange={(ev) => this.updateSignupForm(ev.target.value, "FirstName")} />
+                  </Grid>
+                  <Grid item xs={5}>
+                    <TextField label="Last Name" fullWidth onChange={(ev) => this.updateSignupForm(ev.target.value, "LastName")} />
+                  </Grid>
                 </Grid>
-                <Grid item xs={9}>
-                  <TextField type="password" label="Password" fullWidth onChange={(ev) => this.state.updateUserOrPass(null, ev.target.value)} />
-                </Grid>
-              </Grid>
 
-              <Button variant="raised" color="primary" className="loginBtn" onClick={() => this.state.authenticateUser(this.props.history)}>
-                Login
-								<Send />
-              </Button>
+                <Grid container spacing={8} alignItems="flex-end" justify="center">
+                  <Grid item>
+                    <AccountCircle />
+                  </Grid>
+                  <Grid item xs={9}>
+                    <TextField label="Email" fullWidth onChange={(ev) => this.updateSignupForm(ev.target.value, "Email")} />
+                  </Grid>
+                </Grid>
+
+                <Grid container spacing={8} alignItems="flex-end" justify="center">
+                  <Grid item>
+                    <Lock />
+                  </Grid>
+                  <Grid item xs={9}>
+                    <TextField type="password" label="Password" fullWidth onChange={(ev) => this.updateSignupForm(ev.target.value, "Password")} />
+                  </Grid>
+                </Grid>
+
+                <Button variant="raised" color="primary" className="loginBtn" onClick={() => this.submitSignup()}>
+                  Sign Up
+                </Button>
+
+                <Button color="secondary" className="signupBtn" onClick={() => {this.setState({loginActive: true})}}>
+                  Back to Login?
+                </Button>
+              </div>}
             </Paper>
           </Grid>
         </Grid>
@@ -78,7 +175,7 @@ export default class Login extends Component {
               key="close"
               aria-label="Close"
               color="inherit"
-              onClick={() => this.state.closeError()}
+              onClick={() => {this.setState({openError: false})}}
             >
               <CloseIcon />
             </IconButton>,

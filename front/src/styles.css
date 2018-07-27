@@ -16,12 +16,16 @@
 }
 
 .loginBtn {
-  margin-left: 40% !important;
+  margin-left: 30% !important;
   margin-top: 20px !important;
 }
 
 .loginBtn svg {
   margin-left: 10px;
+}
+
+.signupBtn {
+  margin-top: 20px !important;
 }
 
 .loginHeaderText {
