@@ -19,7 +19,7 @@ import {serverUrl} from '../../constants/client';
 const Cookies = new _cookies();
 export default class Login extends Component {
   constructor(props) {
-    super();
+    super(props);
     this.state={
       loginActive: true,
       openError: false,
@@ -27,6 +27,14 @@ export default class Login extends Component {
     };
     this.signup = {};
     this.login = {};
+
+    this.checkAuthenticate(Cookies.get('token'), this.props.history);
+  }
+
+  checkAuthenticate(data, history) {
+    if (data) {
+      history.push('/dashboard');
+    }
   }
 
   updateSignupForm(val, action) {
