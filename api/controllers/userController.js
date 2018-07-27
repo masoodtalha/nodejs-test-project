@@ -55,7 +55,7 @@ exports.updateUserById = async function(req, res, next) {
 };
 
 exports.authenticateUser = async function(req, res, next) {
-  console.log('#### Data in controller', req.query);
+  console.log('#### Data in controller', req.body);
   const reqData = req.body;
   if (reqData.email && reqData.password) {
     console.log('Data is Legit');
