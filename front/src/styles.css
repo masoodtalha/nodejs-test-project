@@ -32,3 +32,17 @@
   margin-left: 40px;
   padding-top: 20px;;
 }
+
+.table {
+  table-layout: fixed;
+}
+
+.editIcon:hover {
+  color: cornflowerblue;
+  cursor: pointer;
+}
+
+.deleteIcon:hover {
+  color: red;
+  cursor: pointer;
+}
