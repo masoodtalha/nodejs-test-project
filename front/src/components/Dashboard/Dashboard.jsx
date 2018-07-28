@@ -69,12 +69,9 @@ export default class Dashboard extends Component {
     let obj = this.state.notesData;
     const self = this;
     obj = obj.filter((data)=> {
-      // console.log("Filtering", data.date, new moment().format("DD MMMM YYYY"));
       return moment(`${data.date}`).isSameOrAfter(`${self.state.filterDate.start}`, "days") && moment(`${data.date}`).isSameOrBefore(`${self.state.filterDate.end}`, "days");
     })
-    console.log("Filtered Data", obj, new moment().format("DD MM YYYY"));
     this.setState({displayData: obj})
-    console.log("Data Update: ", this.state.displayData);
   }
 
   populateNotes() {
@@ -89,14 +86,12 @@ export default class Dashboard extends Component {
       return response.json();
     }).then(function (response) {
       self.setState({ notesData: response.data, displayData: response.data, showProgress: false });
-      console.log("Got Data: ", response.data);
     }).catch(err => {
       self.setState({ showProgress: false })
     });
   }
 
   tabClicked(tabVal) {
-    console.log("%%%% Tab Value: ", tabVal);
     if(tabVal === 1){
       this.setState({openEdit: true})
     }
@@ -142,7 +137,6 @@ export default class Dashboard extends Component {
     const self = this;
     const token = Cookies.get('token');
     if(data === 'submit') {
-      console.log("%%% Note: ", this.state.addNote);
       fetch(`${serverUrl}/note`, {
         method: 'POST',
         headers: {
@@ -154,7 +148,6 @@ export default class Dashboard extends Component {
         return response.json();
       }).then(function (response) {
         self.setState({ openEdit: false, showProgress: false, message: "Note Added Successfully", showMessage: true });
-        console.log("Got Data: ", response);
         self.populateNotes();
       }).catch(err => {
         self.setState({ showProgress: false })
@@ -162,15 +155,13 @@ export default class Dashboard extends Component {
     }else{
       this.setState({openEdit: false});
     }
-    
+
   }
 
   handleCloseEditDialog(data) {
     const self = this;
     const token = Cookies.get('token');
-    console.log("Token", token);
     if (data === 'submit') {
-      console.log(" Editing Obj", this.state.editData);
       fetch(`${serverUrl}/editNote`, {
         method: 'PUT',
         headers: {
@@ -182,7 +173,6 @@ export default class Dashboard extends Component {
         return response.json();
       }).then(function (response) {
         self.setState({ editDialog: false, message: "Note Updated Successfully", showMessage: true});
-        console.log("Updating: ", response);
       }).catch(err => {
         self.setState({ showProgress: false })
       });
@@ -196,7 +186,6 @@ export default class Dashboard extends Component {
     const self = this;
     const token = Cookies.get('token');
     if (data === 'submit') {
-      console.log(" Deleting Obj", this.state.deleteData);
       fetch(`${serverUrl}/deleteNote`, {
         method: 'DELETE',
         headers: {
@@ -209,7 +198,6 @@ export default class Dashboard extends Component {
       }).then(function (response) {
         self.setState({ deleteDialog: false, message: "Note Deleted Successfully", showMessage: true });
         self.populateNotes();
-        console.log("Deleting: ", response);
       }).catch(err => {
         self.setState({ showProgress: false })
       });
@@ -355,7 +343,7 @@ export default class Dashboard extends Component {
           <TableCell><Delete className="deleteIcon" onClick={()=>{self.setState({deleteDialog: true, deleteData:data});}} /></TableCell>
         </TableRow>);
       })
-    );    
+    );
   }
   changeFilterDates(val, action) {
     let obj = this.state.filterDate;
@@ -390,7 +378,7 @@ export default class Dashboard extends Component {
 
         <Button color="primary" onClick={()=>{this.filterData()}}>Filter</Button>
       </div>
-    );    
+    );
   }
 
   render() {
@@ -402,7 +390,7 @@ export default class Dashboard extends Component {
             <Tab label="Add Report" />
           </Tabs>
           {this.state.showProgress && <CircularProgress color="secondary" />}
-          <Button color="secondary" 
+          <Button color="secondary"
             style={{width: '50px', position: 'absolute',left: '90%', top: '15px'}}
             onClick={() => {
               let cookieExp = new Date((new Date().getTime()) - 365);

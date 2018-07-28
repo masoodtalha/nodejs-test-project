@@ -50,7 +50,7 @@ export default class Login extends Component {
       case "Email":
         this.signup.email = val;
         break;
-      
+
       case "Password":
         this.signup.password = val;
         break;
@@ -59,7 +59,6 @@ export default class Login extends Component {
 
   submitSignup() {
     const self = this;
-    console.log("Submitting Signup: ", this.signup, serverUrl);
     this.setState({showProgress: true});
 
     fetch(`${serverUrl}/users`, {
@@ -72,7 +71,6 @@ export default class Login extends Component {
       return response.json();
     }).then(function (response) {
       self.setState({loginActive: true, showProgress: false});
-      console.log("Got Data: ", response);
     }).catch(err=> {
       self.setState({openError: true})
     });
@@ -92,7 +90,6 @@ export default class Login extends Component {
 
   authenticateUser(history) {
     const self = this;
-    console.log("Submitting Login: ", this.login, serverUrl);
     this.setState({ showProgress: true });
 
     fetch(`${serverUrl}/authUser`, {
@@ -106,12 +103,10 @@ export default class Login extends Component {
     }).then(function (response) {
       if(response.status === 200){
         self.setState({showProgress: false });
-        console.log("Login Successful: ", response.data);
         Cookies.set('token', response.data.token);
         history.push('/dashboard');
       }else{
         self.setState({ showProgress: false , openError: true});
-        console.log("Login Failed");
       }
     }).catch(err => {
       self.setState({ openError: true })
@@ -159,7 +154,7 @@ export default class Login extends Component {
                   Login
 								  <Send />
                 </Button>
-                
+
                 <Button color="primary" className="signupBtn" onClick={() => {this.setState({loginActive: false})}}>
                   Sign up?
                 </Button>
@@ -169,7 +164,7 @@ export default class Login extends Component {
               {!this.state.loginActive && <div>
                 <div className="loginHeaderText">
                   <Typography variant="display1" component="h3">
-                    Sign Up  
+                    Sign Up
 								  </Typography>
                 </div>
 
